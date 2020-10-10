@@ -13,10 +13,16 @@ describe "Card" do
       expect(card.suit).to eq(:S)
     end
   end
+  
+  describe "#symbol" do
+    it "translates @suit and returns unicode symbol code" do
+      expect(card.symbol).to eq()
+    end
+  end
 
   describe "#to_s" do
-    it "returns value and suit as one string" do
-      expect(card.to_s).to eq("2S")
+    it "returns value and suit symbol as one string" do
+      expect(card.to_s).to eq("2♠")
     end
   end
 end
