@@ -6,7 +6,20 @@ class Card
     @suit = suit
   end
 
+  def symbol
+    case @suit
+    when :S
+      "♠"
+    when :H
+      "♥"
+    when :D
+      "♦"
+    when :C
+      "♣"
+    end
+  end
+
   def to_s
-    "#{value.to_s}#{suit.to_s}"
+    "#{value.to_s}#{symbol}"
   end
 end
