@@ -6,4 +6,7 @@ class Card
     @suit = suit
   end
 
+  def to_s
+    "#{value.to_s}#{suit.to_s}"
+  end
 end

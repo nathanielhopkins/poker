@@ -14,9 +14,9 @@ describe "Card" do
     end
   end
 
-  describe "#read" do
+  describe "#to_s" do
     it "returns value and suit as one string" do
-      except(card.read).to eq("2S")
+      expect(card.to_s).to eq("2S")
     end
   end
 end
