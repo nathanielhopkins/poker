@@ -16,7 +16,7 @@ describe "Card" do
   
   describe "#symbol" do
     it "translates @suit and returns unicode symbol code" do
-      expect(card.symbol).to eq()
+      expect(card.symbol).to eq("♠")
     end
   end
 
