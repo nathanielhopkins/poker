@@ -1,3 +1,5 @@
+require 'card'
+
 describe "Card" do
   subject(:card) {Card.new(2,:S)}
   describe "#initialize" do
