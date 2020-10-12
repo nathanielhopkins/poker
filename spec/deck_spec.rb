@@ -28,7 +28,7 @@ describe "Deck" do
     end
 
     it "output is taken in by @cards" do
-      expect(deck.fill_deck).to match_array(deck.cards)
+      expect(deck.fill_deck.length).to eq(deck.cards.length)
     end
 
     it "adds all cards for all four suits to @cards" do
@@ -36,7 +36,7 @@ describe "Deck" do
     end
 
     it "does not duplicate cards" do
-      expect(deck.shuffle).to eq(deck.shuffle.uniq)
+      expect(deck.fill_deck.length).to eq(deck.fill_deck.uniq.length)
     end
   end
 
