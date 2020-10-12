@@ -2,35 +2,41 @@ require "deck"
 
 describe "Deck" do
   subject(:deck) {Deck.new}
+
+  it "creates class constant SUITS equal to [:H,:D,:S,:C]" do
+    expect(Deck::SUITS).to eq([:H,:D,:S,:C])
+  end
+
+  it 'creates class constant VALUES equal to ["2","3","4","5","6","7","8","9","10","J","Q","K","A"]' do
+    expect(Deck::VALUES).to eq(["2","3","4","5","6","7","8","9","10","J","Q","K","A"])
+  end
+
   describe "#initialize" do
     it "creates and reads @cards" do
-      expect(deck.cards).to be_truthy
+      expect{deck.cards}.not_to raise_error
     end
 
     it "creates and reads @discard as empty array" do
       expect(deck.discard).to be_empty
     end
-
-    it "calls #fill_deck" do
-      expect(deck).to receive(:fill_deck)
-    end
-
-    it "calls #shuffle" do
-      expect(deck).to receive(:shuffle)
-    end
   end
 
   describe "#fill_deck" do
-    it "calls Card.new" do
-      expect(subject.fill_deck).to receive(:Card.new)
+
+    it "returns an array" do
+      expect(deck.fill_deck).to be_an(Array)
+    end
+
+    it "output is taken in by @cards" do
+      expect(deck.fill_deck).to match_array(deck.cards)
     end
 
     it "adds all cards for all four suits to @cards" do
-      expect(subject.cards.length).to eq(52)
+      expect(deck.fill_deck.length).to eq(52)
     end
 
     it "does not duplicate cards" do
-      expect(subject.cards).to eq(suject.cards.uniq)
+      expect(deck.shuffle).to eq(deck.shuffle.uniq)
     end
   end
 
