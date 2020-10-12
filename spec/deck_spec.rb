@@ -42,7 +42,9 @@ describe "Deck" do
 
   describe "#shuffle" do
     it "shuffles @cards" do
-      expect(deck).not_to eq(deck.shuffle)
+      before = deck.cards.dup
+      deck.shuffle
+      expect(deck.cards).not_to eq(before)
     end
   end
 
