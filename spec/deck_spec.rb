@@ -8,7 +8,7 @@ describe "Deck" do
     end
 
     it "creates and reads @discard as empty array" do
-      expect(deck.discard).to be([])
+      expect(deck.discard).to be_empty
     end
 
     it "calls #fill_deck" do
