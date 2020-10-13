@@ -8,7 +8,7 @@ describe "Deck" do
   end
 
   it 'creates class constant VALUES equal to ["2","3","4","5","6","7","8","9","10","J","Q","K","A"]' do
-    expect(Deck::VALUES).to eq(["2","3","4","5","6","7","8","9","10","J","Q","K","A"])
+    expect(Deck::VALUES).to eq((2..14).to_a)
   end
 
   describe "#initialize" do
