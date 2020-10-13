@@ -3,7 +3,7 @@ require_relative "card"
 class Deck
   attr_reader :cards, :discard
   SUITS = [:H,:D,:S,:C]
-  VALUES = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"]
+  VALUES = (2..14).to_a
 
   def initialize
     @cards = fill_deck
