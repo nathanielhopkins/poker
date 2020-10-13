@@ -20,6 +20,20 @@ class Card
   end
 
   def to_s
-    "#{value.to_s}#{symbol}"
+    if @value > 10
+      case @value
+      when 11
+        face_value = "J"
+      when 12
+        face_value = "Q"
+      when 13
+        face_value = "K"
+      when 14
+        face_value = "A"
+      end
+      "#{face_value}#{symbol}"
+    else
+      "#{value.to_s}#{symbol}"
+    end
   end
 end
