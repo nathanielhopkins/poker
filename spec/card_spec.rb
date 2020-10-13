@@ -24,5 +24,12 @@ describe "Card" do
     it "returns value and suit symbol as one string" do
       expect(card.to_s).to eq("2♠")
     end
+
+    it "returns face cards(value>10) with letter value (11='J')" do
+      expect(Card.new(11,:H).to_s).to eq("J♥")
+      expect(Card.new(12,:D).to_s).to eq("Q♦")
+      expect(Card.new(13,:C).to_s).to eq("K♣")
+      expect(Card.new(14,:S).to_s).to eq("A♠")
+    end
   end
 end
