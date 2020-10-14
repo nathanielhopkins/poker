@@ -10,7 +10,13 @@ describe "Hand" do
   let(:card7) {Card.new(3,:H)}
   let(:card8) {Card.new(4,:H)}
   let(:card9) {Card.new(6,:H)}
+  let(:card10) {Card.new(5,:C)}
+  let(:card11) {Card.new(2,:C)}
+  let(:card12) {Card.new(2,:D)}
+  let(:card13) {Card.new(6,:D)}
+  let(:card14) {Card.new(14,:H)}
   subject(:hand) { Hand.new(card1,card2,card3,card4,card5)}
+  let(:high_card_hand) {Hand.new(card1,card3,card4,card5,card6)}
 
   it "creates Hand::HAND_SCORES as hash of scores (e.g. straight_flush:1)" do
     HAND_SCORES = { 
@@ -58,7 +64,7 @@ describe "Hand" do
         expect(hand.straight?).to eq(true).or(false)
       end
     context "a straight is present" do
-      let(:straight_hand) {Hand.new(card1,card3,card7,card8,card9)}
+      let(:straight_hand) {Hand.new(card1,card3,card7,card8,card13)}
       it "returns true" do
         expect(straight_hand.straight?).to eq(true)
       end
@@ -71,122 +77,218 @@ describe "Hand" do
   end
 
   describe "flush?" do
-      it "returns a boolean"
+      it "returns a boolean" do
+        expect(hand.flush?).to eq(true).or(false)
+      end
     context "a flush is present" do
-      it "returns true"
+      let(:flush_hand) {Hand.new(card1,card3,card7,card8,card14)}
+      it "returns true" do
+        expect(flush_hand.flush?).to eq(true)
+      end
     end
     context "no flush is present" do
-      it "returns false"
-    end
-  end
-
-  describe "straight_flush?" do
-      it "returns a boolean"
-    context "a straight is present and a flush is present" do
-      it "returns true"
-    end
-    context "straight and flush are not present" do
-      it "returns false"
+      it "returns false" do
+        expect(hand.flush?).to eq(false)
+      end
     end
   end
 
   describe "two_pair?" do
-      it "returns a boolean"
+      it "returns a boolean" do
+        expect(hand.two_pair?).to eq(true).or(false)
+      end
     context "two pairs are present" do
-      it "returns true"
+      let(:two_pair_hand) {Hand.new(card1,card2,card3,card4,card10)}
+      it "returns true" do
+        expect(two_pair_hand.two_pair?).to eq(true)
+      end
     end
     context "two pairs are not present" do
-      it "returns false"
+      it "returns false" do
+        expect(hand.two_pair?).to eq(false)
+      end
     end
   end
   
   describe "three_of_a_kind?" do
-      it "returns a boolean"
+      it "returns a boolean" do
+        expect(hand.three_of_a_kind?).to eq(true).or(false)
+      end
     context "three_of_a_kind is present" do
-      it "returns true"
+      let(:three_hand) {Hand.new(card1,card2,card3,card4,card11)}
+      it "returns true" do
+        expect(three_hand.three_of_a_kind?).to eq(true)
+      end
     end
     context "three_of_a_kind is not present" do
-      it "returns false"
+      it "returns false" do
+        expect(hand.three_of_a_kind?).to eq(false)
+      end
     end
   end
 
   describe "four_of_a_kind?" do
-      it "returns a boolean"
+      it "returns a boolean" do
+        expect(hand.four_of_a_kind?).to eq(true).or(false)
+      end
     context "four_of_a_kind is present" do
-      it "returns true"
+      let(:four_hand) {Hand.new(card1,card2,card3,card11,card12)}
+      it "returns true" do
+        expect(four_hand.four_of_a_kind?).to eq(true)
+      end
     end
     context "four_of_a_kind is not present" do
-      it "returns false"
+      it "returns false" do
+        expect(hand.four_of_a_kind?).to eq(false)
+      end
     end
   end
 
   describe "full_house?" do
-      it "returns a boolean"
+      it "returns a boolean" do
+        expect (hand.full_house?).to eq(true).or(false)
+      end
     context "three_of_kind and separate pair is present" do
-      it "check if pair is duplicated from three_of_a_kind"
-      it "returns true"
+      let(:full_house_hand) {Hand.new(card1,card2,card3,card10,card11)}
+      let(:three_hand) {Hand.new(card1,card2,card3,card4,card11)}
+      it "check if pair is duplicated from three_of_a_kind" do
+        expect(three_hand.full_house?).to eq(false)
+      end
+      it "returns true" do
+        expect(full_house_hand.full_house?).to eq(true)
+      end
     end
     context "three_of_kind and separate pair is not present" do
-      it "returns false"
+      it "returns false" do
+        expect(hand.full_house?).to eq(false)
+      end
     end
   end
 
   describe "#hand_type" do
-    it "calls #pair?"
+    it "returns a hash with key being hand_type and value being card value of best type held (e.g. {pair: 2})" do
+      expect(hand.hand_type).to be_an(Hash)
+    end
+
+    it "calls #pair?" do
+      expect(hand.hand_type).to receive(:pair?)
+    end
     context "#pair? returns false" do
-      it "calls #straight?"
+      let(:straight_flush) {Hand.new(card1,card3,card7,card8,card9)}
+      let(:flush) {Hand.new(card1,card3,card7,card8,card14)}
+      let(:straight) {Hand.new(card1,card3,card7,card8,card13)}
+      let(:straight_flush) {Hand.new(card1,card3,card7,card8,card9)}
+
+      it "calls #straight?" do
+        expect(high_card_hand).to receive(:straight?)
+      end
       context "#straight? returns false" do
-        it "calls #flush?"
+        it "calls #flush?" do
+          expect(flush).to receive(:flush?)
+        end
         context "#flush returns false" do
-          it "returns high_card"
+          it "returns high_card" do
+            expect(high_card_hand.hand_type).to eq({high_card:14})
+          end
         end
         context "#flush? returns true" do
-          it "returns flush"
+          it "returns flush" do
+            expect(flush.hand_type).to eq({flush:14})
+          end
         end
       end
       context "#straight? returns true" do
-        it "calls #flush"
+        it "calls #flush?" do
+          expect(straight.hand_type).to receive(:flush?)
+        end
         context "#flush? returns false" do
-          it "returns straight"
+          it "returns straight" do
+            expect(straight.hand_type).to eq({straight:6})
+          end
         end
         context "#flush? returns true" do
-          it "returns straight_flush"
+          it "returns straight_flush" do
+            expect(straight_flush.hand_type).to eq({straight_flush:6})
+          end
         end
       end
     end
     context "#pair? returns true" do
-      it "calls #three_of_a_kind"
+      let(:three_hand) {Hand.new(card1,card2,card3,card4,card11)}
+      let(:four_hand) {Hand.new(card1,card2,card3,card11,card12)}
+      let(:two_pair_hand) {Hand.new(card1,card2,card3,card4,card10)}
+      let(:full_house_hand) {Hand.new(card1,card2,card3,card10,card11)}
+
+      it "calls #three_of_a_kind" do
+        expect(three_hand.hand_type).to receive(:three_of_a_kind?)
+      end
       context "#three_of_a_kind? returns false" do
-        it "calls #two_pair?"
+        it "calls #two_pair?" do
+          expect(two_pair_hand.hand_type).to receive(:two_pair?)
+        end
         context "#two_pair? returns false" do
-          it "returns pair"
+          it "returns pair" do
+            expect(hand.hand_type).to eq({pair:2})
+          end
         end
         context "#two_pair? returns true" do
-          it "returns two_pair"
+          it "returns two_pair" do
+            expect(two_pair_hand.hand_type).to eq({two_pair:5})
+          end
         end
       end
       context "three_of_a_kind? returns true" do
-        it "calls #four_of_a_kind?"
+        it "calls #four_of_a_kind?" do
+          expect(four_hand.hand_type).to receive(:four_of_a_kind?)
+        end
         context "#four_of_a_kind? returns false" do
-          it "calls #full_house?"
+          it "calls #full_house?" do
+            expect(full_house_hand.hand_type).to receive(:full_house?)
+          end
           context "#full_house? returns false" do
-            it "returns three_of_a_kind"
+            it "returns three_of_a_kind" do
+              expect(three_hand.hand_type).to eq({three_hand:2})
+            end
           end
           context "#full_house? returns true" do
-            it "returns full_house"
+            it "returns full_house" do
+              expect(full_house_hand.hand_type).to eq({full_house:5})
+            end
           end
         end
         context "#four_of_a_kind? returns true" do
-          it "returns four_of_a_kind"
+          it "returns four_of_a_kind" do
+            expect(four_hand.hand_type).to eq({four_of_a_kind:2})
+          end
         end
       end
     end
 
-    it "sets @hand_type as the highest scoring hand type held"
+    it "sets and reads @hand_category as the highest scoring hand type held" do
+      hand.hand_type
+      expect(hand.hand_category).to eq(:pair)
+    end
   end
 
   describe "#hand_score" do 
-    it "calls #hand_type"
-    it "returns value of @hand_type from HAND_SCORES and sets to @hand_score"
+    it "calls #hand_type to set @hand_category" do
+      expect(hand.hand_score).to receive(:hand_type)
+    end
+    it "retrieves value of @hand_category from HAND_SCORES and sets to @hand_score" do
+      expect(hand.hand_score).to eq(8)    
+    end
+    
+    it "sets and reads @high_card to card with highest value" do
+      expect(hand.high_card.to_s).to eq("K♣")
+    end
+  end
+
+  describe "#show_hand" do
+    it "calls #to_s on cards" do
+      expect(hand.show_hand).to receive(:to_s)
+    end
+    it "returns an array of cards to_s (e.g. ['K♠','3♥','K♣','7♣','8♣']" do
+      expect(hand.show_hand).to eq(["2♥","2♠","5♥","K♣","7♦"])
+    end
   end
 end
