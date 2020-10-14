@@ -146,7 +146,7 @@ describe "Hand" do
 
   describe "full_house?" do
       it "returns a boolean" do
-        expect (hand.full_house?).to be(true).or be(false)
+        expect(hand.full_house?).to be(true).or be(false)
       end
     context "three_of_kind and separate pair is present" do
       let(:full_house_hand) {Hand.new(card1,card2,card3,card10,card11)}
