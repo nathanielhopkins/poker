@@ -202,25 +202,13 @@ describe "Hand" do
     it "returns a hash with key being hand_type and value being card value of best type held (e.g. {pair: 2})" do
       expect(hand.hand_type).to be_an(Hash)
     end
-
-    it "calls #pair?" do
-      hand.hand_type
-      expect(hand).to receive(:pair?)
-    end
     context "#pair? returns false" do
       let(:straight_flush) {Hand.new(card1,card3,card7,card8,card9)}
       let(:flush) {Hand.new(card1,card3,card7,card8,card14)}
       let(:straight) {Hand.new(card1,card3,card7,card8,card13)}
       let(:straight_flush) {Hand.new(card1,card3,card7,card8,card9)}
 
-      it "calls #straight?" do
-        expect(high_card_hand).to receive(:straight?)
-      end
       context "#straight? returns false" do
-        it "calls #flush?" do
-          flush.hand_type
-          expect(flush).to receive(:flush?)
-        end
         context "#flush returns false" do
           it "returns high_card" do
             expect(high_card_hand.hand_type).to eq({high_card:14})
@@ -233,10 +221,6 @@ describe "Hand" do
         end
       end
       context "#straight? returns true" do
-        it "calls #flush?" do
-        #   straight.hand_type
-          expect(straight).to receive(:flush?)
-        end
         context "#flush? returns false" do
           it "returns straight" do
             expect(straight.hand_type).to eq({straight:6})
@@ -255,13 +239,7 @@ describe "Hand" do
       let(:two_pair_hand) {Hand.new(card1,card2,card3,card4,card10)}
       let(:full_house_hand) {Hand.new(card1,card2,card3,card10,card11)}
 
-      it "calls #three_of_a_kind" do
-        expect(three_hand).to receive(:three_of_a_kind?)
-      end
       context "#three_of_a_kind? returns false" do
-        it "calls #two_pair?" do
-          expect(two_pair_hand).to receive(:two_pair?)
-        end
         context "#two_pair? returns false" do
           it "returns pair" do
             expect(hand.hand_type).to eq({pair:2})
@@ -274,13 +252,7 @@ describe "Hand" do
         end
       end
       context "three_of_a_kind? returns true" do
-        it "calls #four_of_a_kind?" do
-          expect(four_hand).to receive(:four_of_a_kind?)
-        end
         context "#four_of_a_kind? returns false" do
-          it "calls #full_house?" do
-            expect(full_house_hand).to receive(:full_house?)
-          end
           context "#full_house? returns false" do
             it "returns three_of_a_kind" do
               expect(three_hand.hand_type).to eq({three_hand:2})
@@ -308,7 +280,7 @@ describe "Hand" do
 
   describe "#hand_score" do 
     it "calls #hand_type to set @hand_category" do
-      expect(hand).to receive(:hand_type)
+      expect(hand.hand_category).to eq(:pair)
     end
     it "retrieves value of @hand_category from HAND_SCORES and sets to @hand_score" do
       expect(hand.hand_score).to eq(8)    
