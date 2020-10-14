@@ -37,8 +37,13 @@ describe "Hand" do
     it "takes in five of cards" do
       expect{hand}.not_to raise_error
     end
+
     it "sets and reads @cards to array taken in as arg" do
       expect(hand.cards).to eq([card1,card2,card3,card4,card5])
+    end
+
+    it "sets and reads @high_card as highest value in hand" do
+      expect(hand.high_card).to eq(13)
     end
   end
 
@@ -276,10 +281,6 @@ describe "Hand" do
     end
     it "retrieves value of @hand_category from HAND_SCORES and sets to @hand_score" do
       expect(hand.hand_score).to eq(8)    
-    end
-    
-    it "sets and reads @high_card to card with highest value" do
-      expect(hand.high_card.to_s).to eq("K♣")
     end
   end
 
