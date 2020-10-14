@@ -52,6 +52,11 @@ describe "Hand" do
       expect(hand.pair?).to be(true).or be(false)
     end
     context "a pair is present" do
+      it "sets and reads @match_value to value of highest pair" do
+        hand.pair?
+        expect(hand.match_value).to eq(2)
+      end
+
       it "returns true" do
         expect(hand.pair?).to eq(true)
       end
@@ -104,6 +109,12 @@ describe "Hand" do
       end
     context "two pairs are present" do
       let(:two_pair_hand) {Hand.new(card1,card2,card3,card4,card10)}
+
+      it "sets and reads @match_value to value of pair with highest value" do
+        two_pair_hand.two_pair?
+        expect(two_pair_hand.match_value).to eq(5)
+      end
+
       it "returns true" do
         expect(two_pair_hand.two_pair?).to eq(true)
       end
@@ -121,6 +132,10 @@ describe "Hand" do
       end
     context "three_of_a_kind is present" do
       let(:three_hand) {Hand.new(card1,card2,card3,card4,card11)}
+      it "sets and reads @match_value to value of the three of a kind" do
+        three_hand.three_of_a_kind?
+        expect(three_hand.match_value).to eq(2)
+      end
       it "returns true" do
         expect(three_hand.three_of_a_kind?).to eq(true)
       end
@@ -138,6 +153,12 @@ describe "Hand" do
       end
     context "four_of_a_kind is present" do
       let(:four_hand) {Hand.new(card1,card2,card3,card11,card12)}
+      
+      it "sets and reads @match_value to value of the four of a kind" do
+        four_hand.four_of_a_kind?
+        expect(four_hand.match_value).to eq(2)
+      end
+
       it "returns true" do
         expect(four_hand.four_of_a_kind?).to eq(true)
       end
@@ -156,9 +177,16 @@ describe "Hand" do
     context "three_of_kind and separate pair is present" do
       let(:full_house_hand) {Hand.new(card1,card2,card3,card10,card11)}
       let(:three_hand) {Hand.new(card1,card2,card3,card4,card11)}
+      
       it "check if pair is duplicated from three_of_a_kind" do
         expect(three_hand.full_house?).to eq(false)
       end
+
+      it "sets and reads @match_value to array [value of three, value of pair]" do
+        full_house_hand.full_house?
+        expect(full_house_hand.match_value).to eq([2,5])
+      end
+
       it "returns true" do
         expect(full_house_hand.full_house?).to eq(true)
       end
@@ -176,6 +204,7 @@ describe "Hand" do
     end
 
     it "calls #pair?" do
+      hand.hand_type
       expect(hand).to receive(:pair?)
     end
     context "#pair? returns false" do
@@ -189,6 +218,7 @@ describe "Hand" do
       end
       context "#straight? returns false" do
         it "calls #flush?" do
+          flush.hand_type
           expect(flush).to receive(:flush?)
         end
         context "#flush returns false" do
