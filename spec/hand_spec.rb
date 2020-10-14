@@ -286,10 +286,11 @@ describe "Hand" do
   end
 
   describe "#hand_score" do 
-    it "calls #hand_type to set and read @hand_category" do
-      expect(hand.hand_category).to eq(:pair)
+    it "calls #hand_type to set and read @type" do
+      hand.hand_score
+      expect(hand.type).to eq(:pair)
     end
-    it "retrieves value of @hand_category from HAND_SCORES and sets to @hand_score" do
+    it "retrieves value of @type from HAND_SCORES and sets to @hand_score" do
       expect(hand.hand_score).to eq(8)    
     end
   end
