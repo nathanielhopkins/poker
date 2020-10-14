@@ -106,6 +106,7 @@ class Hand
       when false
         case flush?
         when false
+          @match_value = @high_card
           return :high_card
         when true
           return :flush

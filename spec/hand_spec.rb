@@ -222,6 +222,11 @@ describe "Hand" do
 
       context "#straight? returns false" do
         context "#flush returns false" do
+          it "sets and reads @match_value to value of @high_card" do
+            high_card_hand.hand_type
+            expect(high_card_hand.match_value).to eq(14)
+          end
+
           it "returns high_card" do
             expect(high_card_hand.hand_type).to eq(:high_card)
           end
