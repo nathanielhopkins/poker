@@ -211,24 +211,24 @@ describe "Hand" do
       context "#straight? returns false" do
         context "#flush returns false" do
           it "returns high_card" do
-            expect(high_card_hand.hand_type).to eq({high_card:14})
+            expect(high_card_hand.hand_type).to eq(:high_card)
           end
         end
         context "#flush? returns true" do
           it "returns flush" do
-            expect(flush.hand_type).to eq({flush:14})
+            expect(flush.hand_type).to eq(:flush)
           end
         end
       end
       context "#straight? returns true" do
         context "#flush? returns false" do
           it "returns straight" do
-            expect(straight.hand_type).to eq({straight:6})
+            expect(straight.hand_type).to eq(:straight)
           end
         end
         context "#flush? returns true" do
           it "returns straight_flush" do
-            expect(straight_flush.hand_type).to eq({straight_flush:6})
+            expect(straight_flush.hand_type).to eq(:straight_flush)
           end
         end
       end
