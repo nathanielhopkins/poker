@@ -30,7 +30,7 @@ describe "Hand" do
       pair:8,
       high_card:9
     }
-    expect(Deck::HAND_SCORES).to match_hash(HAND_SCORES)
+    expect(Hand::HAND_SCORES).to match_array(HAND_SCORES)
   end
 
   describe "#initialize" do
