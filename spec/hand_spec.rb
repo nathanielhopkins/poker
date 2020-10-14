@@ -176,7 +176,7 @@ describe "Hand" do
     end
 
     it "calls #pair?" do
-      expect(hand.hand_type).to receive(:pair?)
+      expect(hand).to receive(:pair?)
     end
     context "#pair? returns false" do
       let(:straight_flush) {Hand.new(card1,card3,card7,card8,card9)}
@@ -204,7 +204,8 @@ describe "Hand" do
       end
       context "#straight? returns true" do
         it "calls #flush?" do
-          expect(straight.hand_type).to receive(:flush?)
+        #   straight.hand_type
+          expect(straight).to receive(:flush?)
         end
         context "#flush? returns false" do
           it "returns straight" do
@@ -225,11 +226,11 @@ describe "Hand" do
       let(:full_house_hand) {Hand.new(card1,card2,card3,card10,card11)}
 
       it "calls #three_of_a_kind" do
-        expect(three_hand.hand_type).to receive(:three_of_a_kind?)
+        expect(three_hand).to receive(:three_of_a_kind?)
       end
       context "#three_of_a_kind? returns false" do
         it "calls #two_pair?" do
-          expect(two_pair_hand.hand_type).to receive(:two_pair?)
+          expect(two_pair_hand).to receive(:two_pair?)
         end
         context "#two_pair? returns false" do
           it "returns pair" do
@@ -244,11 +245,11 @@ describe "Hand" do
       end
       context "three_of_a_kind? returns true" do
         it "calls #four_of_a_kind?" do
-          expect(four_hand.hand_type).to receive(:four_of_a_kind?)
+          expect(four_hand).to receive(:four_of_a_kind?)
         end
         context "#four_of_a_kind? returns false" do
           it "calls #full_house?" do
-            expect(full_house_hand.hand_type).to receive(:full_house?)
+            expect(full_house_hand).to receive(:full_house?)
           end
           context "#full_house? returns false" do
             it "returns three_of_a_kind" do
@@ -277,7 +278,7 @@ describe "Hand" do
 
   describe "#hand_score" do 
     it "calls #hand_type to set @hand_category" do
-      expect(hand.hand_score).to receive(:hand_type)
+      expect(hand).to receive(:hand_type)
     end
     it "retrieves value of @hand_category from HAND_SCORES and sets to @hand_score" do
       expect(hand.hand_score).to eq(8)    
