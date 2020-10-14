@@ -75,6 +75,12 @@ describe "Hand" do
       end
     context "a straight is present" do
       let(:straight_hand) {Hand.new(card1,card3,card7,card8,card13)}
+
+      it "sets and reads @match_value to value of @high_card" do
+        straight_hand.straight?
+        expect(straight_hand.match_value).to eq(6)
+      end
+
       it "returns true" do
         expect(straight_hand.straight?).to eq(true)
       end
@@ -92,6 +98,12 @@ describe "Hand" do
       end
     context "a flush is present" do
       let(:flush_hand) {Hand.new(card1,card3,card7,card8,card14)}
+
+      it "sets and reads @match_value to value of @high_card" do
+        flush_hand.flush?
+        expect(flush_hand.match_value).to eq(14)
+      end
+
       it "returns true" do
         expect(flush_hand.flush?).to eq(true)
       end
@@ -271,15 +283,10 @@ describe "Hand" do
         end
       end
     end
-
-    it "sets and reads @hand_category as the highest scoring hand type held" do
-      hand.hand_type
-      expect(hand.hand_category).to eq(:pair)
-    end
   end
 
   describe "#hand_score" do 
-    it "calls #hand_type to set @hand_category" do
+    it "calls #hand_type to set and read @hand_category" do
       expect(hand.hand_category).to eq(:pair)
     end
     it "retrieves value of @hand_category from HAND_SCORES and sets to @hand_score" do
