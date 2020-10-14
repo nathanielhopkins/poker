@@ -44,7 +44,7 @@ describe "Hand" do
 
   describe "pair?" do
     it "returns a boolean" do
-      expect(hand.pair?).to eq(true).or(false)
+      expect(hand.pair?).to be(true).or be(false)
     end
     context "a pair is present" do
       it "returns true" do
@@ -61,7 +61,7 @@ describe "Hand" do
 
   describe "straight?" do
       it "returns a boolean" do
-        expect(hand.straight?).to eq(true).or(false)
+        expect(hand.straight?).to be(true).or be(false)
       end
     context "a straight is present" do
       let(:straight_hand) {Hand.new(card1,card3,card7,card8,card13)}
@@ -78,7 +78,7 @@ describe "Hand" do
 
   describe "flush?" do
       it "returns a boolean" do
-        expect(hand.flush?).to eq(true).or(false)
+        expect(hand.flush?).to be(true).or be(false)
       end
     context "a flush is present" do
       let(:flush_hand) {Hand.new(card1,card3,card7,card8,card14)}
@@ -95,7 +95,7 @@ describe "Hand" do
 
   describe "two_pair?" do
       it "returns a boolean" do
-        expect(hand.two_pair?).to eq(true).or(false)
+        expect(hand.two_pair?).to be(true).or be(false)
       end
     context "two pairs are present" do
       let(:two_pair_hand) {Hand.new(card1,card2,card3,card4,card10)}
@@ -112,7 +112,7 @@ describe "Hand" do
   
   describe "three_of_a_kind?" do
       it "returns a boolean" do
-        expect(hand.three_of_a_kind?).to eq(true).or(false)
+        expect(hand.three_of_a_kind?).to be(true).or be(false)
       end
     context "three_of_a_kind is present" do
       let(:three_hand) {Hand.new(card1,card2,card3,card4,card11)}
@@ -129,7 +129,7 @@ describe "Hand" do
 
   describe "four_of_a_kind?" do
       it "returns a boolean" do
-        expect(hand.four_of_a_kind?).to eq(true).or(false)
+        expect(hand.four_of_a_kind?).to be(true).or be(false)
       end
     context "four_of_a_kind is present" do
       let(:four_hand) {Hand.new(card1,card2,card3,card11,card12)}
@@ -146,7 +146,7 @@ describe "Hand" do
 
   describe "full_house?" do
       it "returns a boolean" do
-        expect (hand.full_house?).to eq(true).or(false)
+        expect (hand.full_house?).to be(true).or be(false)
       end
     context "three_of_kind and separate pair is present" do
       let(:full_house_hand) {Hand.new(card1,card2,card3,card10,card11)}
