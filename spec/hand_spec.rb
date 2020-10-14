@@ -199,8 +199,8 @@ describe "Hand" do
   end
 
   describe "#hand_type" do
-    it "returns a hash with key being hand_type and value being card value of best type held (e.g. {pair: 2})" do
-      expect(hand.hand_type).to be_an(Hash)
+    it "returns hand_type as a symbol"do
+      expect(hand.hand_type).to be_an(Symbol)
     end
     context "#pair? returns false" do
       let(:straight_flush) {Hand.new(card1,card3,card7,card8,card9)}
@@ -242,12 +242,12 @@ describe "Hand" do
       context "#three_of_a_kind? returns false" do
         context "#two_pair? returns false" do
           it "returns pair" do
-            expect(hand.hand_type).to eq({pair:2})
+            expect(hand.hand_type).to eq(:pair)
           end
         end
         context "#two_pair? returns true" do
           it "returns two_pair" do
-            expect(two_pair_hand.hand_type).to eq({two_pair:5})
+            expect(two_pair_hand.hand_type).to eq(:two_pair)
           end
         end
       end
@@ -255,18 +255,18 @@ describe "Hand" do
         context "#four_of_a_kind? returns false" do
           context "#full_house? returns false" do
             it "returns three_of_a_kind" do
-              expect(three_hand.hand_type).to eq({three_hand:2})
+              expect(three_hand.hand_type).to eq(:three_of_a_kind)
             end
           end
           context "#full_house? returns true" do
             it "returns full_house" do
-              expect(full_house_hand.hand_type).to eq({full_house:5})
+              expect(full_house_hand.hand_type).to eq(:full_house)
             end
           end
         end
         context "#four_of_a_kind? returns true" do
           it "returns four_of_a_kind" do
-            expect(four_hand.hand_type).to eq({four_of_a_kind:2})
+            expect(four_hand.hand_type).to eq(:four_of_a_kind)
           end
         end
       end
