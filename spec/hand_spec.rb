@@ -296,9 +296,6 @@ describe "Hand" do
   end
 
   describe "#show_hand" do
-    it "calls #to_s on cards" do
-      expect(hand.show_hand).to receive(:to_s)
-    end
     it "returns an array of cards to_s (e.g. ['K♠','3♥','K♣','7♣','8♣']" do
       expect(hand.show_hand).to eq(["2♥","2♠","5♥","K♣","7♦"])
     end
