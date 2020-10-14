@@ -34,7 +34,7 @@ describe "Hand" do
   end
 
   describe "#initialize" do
-    it "takes in array of cards" do
+    it "takes in five of cards" do
       expect{hand}.not_to raise_error
     end
     it "sets and reads @cards to array taken in as arg" do
