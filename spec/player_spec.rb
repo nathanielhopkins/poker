@@ -10,17 +10,17 @@ describe "Player" do
   subject(:player) {Player.new(test_hand,100)}
 
   describe "#initialize" do
-    let(:new_player) {Player.new(hand,pot)}
+
     it "takes in a hand and a pot" do
-      expect{new_player}.not_to raise_error
+      expect{player}.not_to raise_error
     end
 
     it "sets and reads @hand as received hand" do
-      expect(new_player.hand).to eq(hand)
+      expect(player.hand).to eq(test_hand)
     end
 
     it "sets and reads @pot as received pot" do
-      expect(new_player.pot).to eq(pot)
+      expect(player.pot).to eq(100)
     end
   end
 
