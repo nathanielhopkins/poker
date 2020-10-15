@@ -6,7 +6,10 @@ describe "Player" do
   let(:card3) {Card.new(5,:H)}
   let(:card4) {Card.new(13,:C)}
   let(:card5) {Card.new(7,:D)}
+  let(:card6) {Card.new(14,:S)}
+  let(:card7) {Card.new(3,:H)}
   let(:test_hand) { Hand.new(card1,card2,card3,card4,card5)}
+  let(:new_hand) {Hand.new(card3,card4,card5,card6,card7)}
   subject(:player) {Player.new(test_hand,100)}
 
   describe "#initialize" do
@@ -35,16 +38,23 @@ describe "Player" do
     end
   end
 
-  describe "hand=(value)" do
-    it "allows @hand to eq new value" do
-      player.hand=('test')
-      expect(player.hand).to eq('test')
+  describe "pot=(value)" do
+    it "allows @pot to eq new value" do
+      player.pot = ('test')
+      expect(player.pot).to eq('test')
+    end
+  end
+
+  describe "new_hand(value)" do
+    
+    it "allows @hand to eq new value" do 
+      player.new_hand(new_hand)
+      expect(player.hand).to eq(new_hand)
     end 
 
     it "updates @cards to new hand" do
-      player.hand=(new_hand)
-      allow(:new_hand).to receive(:cards).and_return("new_cards")
-      expect(player.cards).to eq("new_cards")
+      player.new_hand(new_hand)
+      expect(player.cards).to eq([card3,card4,card5,card6,card7])
     end
   end
 
