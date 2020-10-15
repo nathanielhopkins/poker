@@ -68,10 +68,6 @@ describe "Player" do
       player.discard([card1,card2])
       expect(player.cards).to eq([card3,card4,card5])
     end
-
-    it "returns removed cards as array" do
-      expect(player.discard([card1,card2])).to eq([card1,card2])
-    end
   end
 
   describe "#discard_prompt" do
