@@ -19,8 +19,32 @@ describe "Player" do
       expect(player.hand).to eq(test_hand)
     end
 
+    it "sets and reads @cards as @hands.cards" do
+      expect(player.cards).to eq([card1,card2,card3,card4,card5])
+    end
+
     it "sets and reads @pot as received pot" do
       expect(player.pot).to eq(100)
+    end
+  end
+
+  describe "cards=(value)" do
+    it "allows @cards to eq new value" do
+      player.cards=("test")
+      expect(player.cards).to eq("test")
+    end
+  end
+
+  describe "hand=(value)" do
+    it "allows @hand to eq new value" do
+      player.hand=('test')
+      expect(player.hand).to eq('test')
+    end 
+
+    it "updates @cards to new hand" do
+      player.hand=(new_hand)
+      allow(:new_hand).to receive(:cards).and_return("new_cards")
+      expect(player.cards).to eq("new_cards")
     end
   end
 
@@ -30,9 +54,9 @@ describe "Player" do
       expect{player.discard([card1,card2,card3])}.not_to raise_error
     end
 
-    it "removes inputed cards from player's hand" do
+    it "removes inputed cards from @cards" do
       player.discard([card1,card2])
-      expect(player.hand.cards).to eq([card3,card4,card5])
+      expect(player.cards).to eq([card3,card4,card5])
     end
 
     it "returns removed cards as array" do
@@ -42,9 +66,9 @@ describe "Player" do
 
   describe "#discard_prompt" do
 
-    it "calls #discard to remove cards from player hand" do
+    it "calls #discard to remove cards from player cards" do
       allow(:discard_prompt).to receive(:gets).and_return("card1,card2")
-      expect(player.hand.cards).to eq([card2,card3,card4,card5])
+      expect(player.cards).to eq([card2,card3,card4,card5])
     end
 
     it "returns an array" do
