@@ -7,7 +7,8 @@ class Player
 
   def initialize(hand, pot)
     @hand = hand
-    @cards = @hand.cards
+    @cards = []
+    @cards = @hand.cards if @hand
     @pot = pot
   end
 
