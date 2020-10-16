@@ -1,8 +1,125 @@
 require "game"
 
 describe "Game" do
+  subject(:game) {Game.new(100,"Frank","Jim","Bob")}
 
+  describe "#initialize" do
+    it "takes in player pot size and names of players" do
+      expect{game}.not_to raise_error
+    end
 
+    it "requires at least two players" do
+      expect{Game.new(100,"Frank")}.to raise_error(ArguementError)
+    end
 
+    it "creates a new deck and holds and reads as @deck" do
+      expect(game.deck).to be_an(Deck)
+    end
+
+    it "creates and reads @pot starting as 0" do
+      expect(game.pot).to eq(0)
+    end 
+
+    it "creates and reads @players as an hash {player_name: Player.new(player_pot,player_name)}" do
+      expect(game.players.keys).to eq(["Frank","Jim","Bob"])
+      expect(game.players["Frank"]).to be_an(Player)
+    end
+
+    it "creates and reads @current_player, initializing as value of first @player" do
+      expect(game.current_player).to eq(game.players[game.players.first])
+    end
+  end
+
+  describe "#pot=(value)" do
+    it "sets pot to new value" do
+      game.pot = 250
+      expect(game.pot).to eq(250)
+    end
+  end
+
+  describe "#switch_player" do
+    it "rotates @players so first player is now last" do
+      game.switch_player
+      expect(game.players.keys).to eq(["Jim","Bob","Frank"])
+    end
+
+    it "resets @current_player to new first player" do
+      game.switch_player
+      expect(game.current_player).to eq(game.players[game.players.first])
+    end
+  end
+
+  describe "#deal_em" do
+    it "sets @pot back to 0"
+    it "creates a new Deck and shuffles"
+    it "calls deck#deal to deal each player 5 cards" 
+    it "calls player#new_hand on each player so their hand is their dealt cards"
+  end
+
+  describe "#show_turn" do
+    it "Says whose turn it is, calls and prints hand#show_hand, and waits for player to hit Enter to continue" do
+      allow_any_instance_of(Game).to receive(:gets).and_return(true)
+      expect(game.show_turn).to eq(true)
+    end
+  end
+
+  describe "#draw_phase" do
+    it "calls #show_turn"
+    it "calls player#discard_phase for current player"
+    it "deals new cards to current player to replace discarded cards"
+    it "calls show_turn again"
+  end
+
+  describe "#bet_display" do
+    it "prints who is betting, shows player bet, shows current bet, and wait for player to hit Enter to continue."
+  end
+
+  describe "#bet_phase" do
+    it "initializes @current_bet as 10 (round ante)"
+    it "calls #bet_display" 
+    context "player's bet is equal to current bet" do
+      context "#get_action returns :see"
+      context "#get_action returns :fold"
+      context "#get_action returns :raise"
+    end
+  end
     
+    context "player's bet is less than current bet" do
+      context "#get_action returns :see"
+      context "#get_action returns :fold"
+      context "#get_action returns :raise"
+    end
+
+  describe "#show_em" do
+    it "prints each player still in hand with thier cards (hand#show_hand)"
+    context "one hand has the best(lowest) hand_score" do
+      it "declares that hand the winner"
+    end
+    context "two hands have the best and same hand_score" do
+      context "one hand has higher match_value" do
+        it "declares higher match_value hand as winner"
+      end
+      context "match_values are equal" do
+        context "one hand as higher high_card" do
+          it "declares the higher high_card hand the winner"
+        end
+        context "high_cards are the same" do
+           it "declares a draw and splits the pot"
+        end
+      end
+    end
+  end
+
+  describe "#play_hand" do
+    it "calls #deal_em"
+    it "calls #draw_phase and #switch_player for each player"
+    it "calls #bet_phase until everyone has seen bet or folded"
+    it "calls #show_em"
+    it "removes any players whose pots < 10 (round ante)"
+  end
+
+  describe "#play" do
+    it "calls #play_hand until only one player remains"
+    it "declares last remaining player as winner and returns 'Game Over'"
+  end
 end
