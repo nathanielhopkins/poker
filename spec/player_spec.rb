@@ -22,8 +22,16 @@ describe "Player" do
       expect(player.hand).to eq(test_hand)
     end
 
-    it "sets and reads @cards as @hands.cards" do
-      expect(player.cards).to eq([card1,card2,card3,card4,card5])
+    context "@hand is truthy (has a hand)" do
+      it "sets and reads @cards as @hands.cards" do
+        expect(player.cards).to eq([card1,card2,card3,card4,card5])
+      end
+    end
+
+    context "@hand is falsey (no hand)" do
+      it "sets and reads @cards as empty array" do
+        expect(Player.new(nil,100).cards).to eq([])
+      end
     end
 
     it "sets and reads @pot as received pot" do
