@@ -37,6 +37,10 @@ describe "Player" do
     it "sets and reads @pot as received pot" do
       expect(player.pot).to eq(100)
     end
+
+    it "sets and reads @current_action as nil" do
+      expect(player.current_action).to eq(:none)
+    end
   end
 
   describe "cards=(value)" do
@@ -153,9 +157,23 @@ describe "Player" do
       expect(player.get_action).to eq(:fold)
     end
 
+    it "sets and reads @current_action as user input" do
+      allow_any_instance_of(Player).to receive(:gets).and_return("see")
+      player.get_action
+      expect(player.current_action).to eq(:see)
+    end
+
     it "raises error, rescues, and retries if user input is not 'fold','see',or'raise'" do
       allow_any_instance_of(Player).to receive(:gets).and_return('bluff','beg','see')
       expect(player.get_action).to eq(:see)
+    end
+  end
+
+  describe "reset_action" do
+    it "sets @current_action to equal :none" do
+      player.instance_variable_set(:@current_action, :fold)
+      player.reset_action
+      expect(player.current_action).to eq(:none)
     end
   end
 end
