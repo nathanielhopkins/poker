@@ -57,8 +57,14 @@ describe "Player" do
     end
   end
 
+  describe "bet=(value)" do
+    it "sets and reads @bet as given value" do
+      player.bet = 10
+      expect(player.bet).to eq(10)
+    end
+  end
+
   describe "new_hand(value)" do
-    
     it "allows @hand to eq new value" do 
       player.new_hand(new_hand)
       expect(player.hand).to eq(new_hand)
