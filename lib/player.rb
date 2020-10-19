@@ -2,7 +2,7 @@ require_relative "deck"
 require_relative "hand"
 
 class Player
-  attr_reader :hand
+  attr_reader :hand, :current_action
   attr_accessor :cards, :pot
 
   def initialize(hand, pot)
@@ -10,6 +10,7 @@ class Player
     @cards = []
     @cards = @hand.cards if @hand
     @pot = pot
+    @current_action = :none
   end
 
   def new_hand(value)
@@ -60,19 +61,25 @@ class Player
   end
 
   def get_action
-    puts "Select one of these options by typing: fold,see, or raise"
     action = gets.chomp
     case action
     when 'fold'
+      @current_action = :fold
       return :fold
     when 'see'
+      @current_action = :see
       return :see
     when 'raise'
+      @current_action = :raise
       return :raise
     else
       raise "invalid action"
     end
     rescue StandardError
     retry
+  end
+
+  def reset_action
+    @current_action = :none
   end
 end
