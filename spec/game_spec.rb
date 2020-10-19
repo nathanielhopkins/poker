@@ -50,10 +50,25 @@ describe "Game" do
   end
 
   describe "#deal_em" do
-    it "sets @pot back to 0"
-    it "creates a new Deck and shuffles"
-    it "calls deck#deal to deal each player 5 cards" 
-    it "calls player#new_hand on each player so their hand is their dealt cards"
+    it "sets @pot back to 0" do
+      game.instance_variable_set(:@pot, 200)
+      game.deal_em
+      expect(game.pot).to eq(0)
+    end
+    it "creates a new Deck and shuffles" do
+      old_deck = game.deck.dup
+      game.deal_em
+      expect(game.deck).not_to eq(old_deck)
+    end
+    it "calls deck#deal to deal each player 5 cards"  do
+      game.deal_em
+      expect(game.deck.cards.length).to eq(37)
+      expect(game.current_player.cards).not_to be_empty
+    end
+    it "calls player#new_hand on each player so their hand is their dealt cards" do
+      game.deal_em
+      expect(game.current_player.hand).not_to eq(nil)
+    end
   end
 
   describe "#show_turn" do
@@ -64,31 +79,67 @@ describe "Game" do
   end
 
   describe "#draw_phase" do
-    it "calls #show_turn"
-    it "calls player#discard_phase for current player"
-    it "deals new cards to current player to replace discarded cards"
-    it "calls show_turn again"
+    it "calls #show_turn" do
+      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
+      expect(game.draw_phase).to eq(true)
+    end
+    it "calls player#discard_phase for current player" do
+      allow_any_instance_of(Player).to receive(:discard_phase).and_return(game.current_player.cards[0])
+      expect(game.current_player.cards.length).to eq(4)
+    end
+    it "deals new cards to current player to replace discarded cards" do
+      allow_any_instance_of(Deck).to receive(:deal).and_return("dummy_card")
+      expect(game.current_player.cards[4]).to eq("dummy_card")
+    end
+    it "calls show_turn again" do
+      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
+      expect(game.draw_phase).to eq(true)
+    end
   end
 
   describe "#bet_display" do
-    it "prints who is betting, shows player bet, shows current bet, and wait for player to hit Enter to continue."
+    it "prints who is betting, shows player bet, shows current bet, and wait for player to hit Enter to continue." do
+      allow_any_instance_of(Game).to receive(:gets).and_return(true)
+      expect(game.bet_display).to eq(true)
+    end
   end
 
   describe "#bet_phase" do
-    it "initializes @current_bet as 10 (round ante)"
+    it "initializes @current_bet as 10 (round ante)" do
+      game.bet_phase
+      expect(game.current_bet).to eq(10)
+    end
     it "calls #bet_display" 
     context "player's bet is equal to current bet" do
-      context "#get_action returns :see"
-      context "#get_action returns :fold"
-      context "#get_action returns :raise"
+      context "#get_action returns :see" do
+        it "does not change player bet or game bet and keeps player in hand"
+      end
+      context "#get_action returns :fold" do
+        it "removes player from hand"
+      end
+      context "#get_action returns :raise" do
+        it "raises current game bet to player bet"
+        it "moves difference from players pot to game pot"
+        it "keeps player in hand"
+      end
     end
-  end
     
     context "player's bet is less than current bet" do
-      context "#get_action returns :see"
-      context "#get_action returns :fold"
-      context "#get_action returns :raise"
+      context "#get_action returns :see" do
+        it "raises player bet to equal current bet"
+        it "moves difference from players pot to game pot"
+        it "keeps player in hand"
+      end
+      context "#get_action returns :fold" do
+        it "removes player from hand"
+      end
+      context "#get_action returns :raise" do
+        it "raises current game bet to player bet"
+        it "moves difference from players pot to game pot"
+        it "keeps player in hand"
+      end
     end
+  end
 
   describe "#show_em" do
     it "prints each player still in hand with thier cards (hand#show_hand)"
