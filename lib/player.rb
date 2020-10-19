@@ -2,7 +2,7 @@ require_relative "deck"
 require_relative "hand"
 
 class Player
-  attr_reader :hand, :current_action
+  attr_reader :hand, :current_action, :bet
   attr_accessor :cards, :pot
 
   def initialize(hand, pot)
@@ -13,12 +13,14 @@ class Player
     @current_action = :none
   end
 
+  def bet=(value)
+    @bet = value
+  end
+
   def new_hand(value)
     @hand = value
     @cards = @hand.cards
   end
-  
-
 
   def discard_phase
     discard_display
