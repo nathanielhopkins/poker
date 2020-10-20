@@ -45,7 +45,7 @@ describe "Game" do
 
     it "resets @current_player to new first player" do
       game.switch_player
-      expect(game.current_player).to eq(game.players[game.players.first])
+      expect(game.current_player).to eq(game.players.values.first)
     end
   end
 
