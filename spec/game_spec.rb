@@ -188,44 +188,157 @@ describe "Game" do
           game.instance_variable_set(:@current_bet, 20)
           game.current_player.instance_variable_set(:@bet,10)
           game.bet_from_player
-          expect(game.current_player.pot).to eq(80)
+          expect(game.current_player.bet).to eq(20)
         end
 
-        it "moves difference from players pot to game pot"
-        it "keeps player in hand"
+        it "moves difference from players pot to game pot" do
+          allow_any_instance_of(Player).to recieve(:gets).and_return("see")
+          game.instance_variable_set(:@current_bet, 20)
+          game.current_player.instance_variable_set(:@bet,10)
+          game.bet_from_player
+          expect(game.current_player.pot).to eq(80)
+          expect(game.pot).to eq(10)
+        end
+        it "keeps player in hand" do
+          allow_any_instance_of(Player).to recieve(:gets).and_return("see")
+          game.instance_variable_set(:@current_bet, 20)
+          game.current_player.instance_variable_set(:@bet,10)
+          game.bet_from_player
+          expect(game.players_in_hand).to include(game.current_player)
+        end
       end
       context "#get_action returns :fold" do
-        it "removes player from hand"
+        it "removes player from hand" do
+          allow_any_instance_of(Player).to receive(:gets).and_return("fold")
+          game.bet_from_player
+          expect(game.players_in_hand).not_to include(game.current_player)
+        end
       end
       context "#get_action returns :raise" do
-        it "raises current game bet to player bet"
-        it "moves difference from players pot to game pot"
-        it "keeps player in hand"
+        context "asks user for raise amount and raise exceeds player's pot" do
+          it "raises error and gets new bet" do
+            allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise",100000,10)
+            expect{game.bet_from_player}.not_to raise_error
+          end
+        end
+        context "asks user for raise amount and raise does not exceed player's pot" do
+          it "raises current game bet to player bet" do
+            allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise", 10)
+            game.instance_variable_set(:@current_bet, 0)
+            game.current_player.instance_variable_set(:@bet,10)
+            game.bet_from_player
+            expect(game.current_bet).to eq(10)
+          end
+          it "moves difference from players pot to game pot" do
+            allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise",10)
+            game.instance_variable_set(:@current_bet, 0)
+            game.current_player.instance_variable_set(:@bet,0)
+            game.bet_from_player
+            expect(game.current_player.pot).to eq(90)
+            expect(game.pot).to eq(10)
+          end
+          it "keeps player in hand" do
+            allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise",10)
+            game.instance_variable_set(:@current_bet, 0)
+            game.current_player.instance_variable_set(:@bet,0)
+            game.bet_from_player
+            expect(game.players_in_hand).to include(game.current_player)
+          end
+        end
       end
     end
   end
 
   describe "#bet_phase" do
-    it "calls #bet_from_player for each @players_in_hand"
-    it "calls #bet_from_player until everyone has seen or folded"
+    it "calls #bet_from_player for each @players_in_hand" do
+      allow_any_instance_of(Player).to receive(:gets).and_return("see")
+      game.instance_variable_set(:@current_bet,10)
+      game.bet_phase
+      expect(game.pot).to eq(30)
+      expect(game.current_player.pot).to eq(90)
+    end
+    it "calls #bet_from_player until everyone has seen or folded then returns true" do
+      allow_any_instance_of(Player).to receive(:gets).and_return("see")
+      game.instance_variable_set(:@current_bet,10)
+      game.bet_phase
+      expect(game.bet_phase).to eq(true)
+    end
   end
 
   describe "#show_em" do
-    it "prints each player still in hand with thier cards (hand#show_hand)"
+    it "prints each player still in hand with thier cards (hand#show_hand), compares hands, and returns winner(s) as array" do
+      expect(game.show_em).to be_an(Array)
+    end
     context "one hand has the best(lowest) hand_score" do
-      it "declares that hand the winner"
+      it "returns player with best hand_score" do
+        allow_any_instance_of(Game).to receive(:players_in_hand).and_return([Bob,Frank])
+        allow(Bob).to receive(:hand_score).and_return(3)
+        allow(Frank).to receive(:hand_score).and_return(5)
+        expect(game.show_em).to eq([Bob])
+      end
     end
     context "two hands have the best and same hand_score" do
       context "one hand has higher match_value" do
-        it "declares higher match_value hand as winner"
+        it "returns the player with higher match_value hand" do
+        allow_any_instance_of(Game).to receive(:players_in_hand).and_return([Bob,Frank])
+        allow(Bob).to receive(:hand_score).and_return(5)
+        allow(Frank).to receive(:hand_score).and_return(5)
+        allow(Bob).to receive(:match_value).and_return(2)
+        allow(Frank).to receive(:match_value).and_return(12)
+        expect(game.show_em).to eq([Frank])
+        end
       end
       context "match_values are equal" do
         context "one hand as higher high_card" do
-          it "declares the higher high_card hand the winner"
+          it "returns the player with the higher high_card hand" do
+            allow_any_instance_of(Game).to receive(:players_in_hand).and_return([Bob,Frank])
+            allow(Bob).to receive(:hand_score).and_return(5)
+            allow(Frank).to receive(:hand_score).and_return(5)
+            allow(Bob).to receive(:match_value).and_return(2)
+            allow(Frank).to receive(:match_value).and_return(2)
+            allow(Bob).to receive(:high_card).and_return(7)
+            allow(Frank).to receive(:high_card).and_return(12)
+            expect(game.show_em).to eq([Frank])
+          end
         end
         context "high_cards are the same" do
-           it "declares a draw and splits the pot"
+           it "returns array of tying winners" do
+            allow_any_instance_of(Game).to receive(:players_in_hand).and_return([Bob,Frank])
+            allow(Bob).to receive(:hand_score).and_return(5)
+            allow(Frank).to receive(:hand_score).and_return(5)
+            allow(Bob).to receive(:match_value).and_return(2)
+            allow(Frank).to receive(:match_value).and_return(2)
+            allow(Bob).to receive(:high_card).and_return(7)
+            allow(Frank).to receive(:high_card).and_return(7)
+            expect(game.show_em).to eq([Bob,Frank])
+           end
         end
+      end
+    end
+  end
+
+  describe "#pay_out" do
+    it "takes in array containing one or more players" do
+      expect{game.pay_out([player])}.not_to raise_error
+      expect{game.pay_out([player1,player2])}.not_to raise_error
+    end
+
+    context "one player is given" do
+      it "pays out entire pot to player's pot" do
+        game.instance_variable_set(:@pot, 50)
+        game.pay_out([game.current_player])
+        expect(game.current_player.pot).to eq(150)
+      end
+    end
+
+    context "two or more players are given" do
+      it "splits the pot evenly among given players" do
+        game.instance_variable_set(:@pot, 40)
+        frank = instance_double("Frank", :pot => 0)
+        bob = instance_double("Bob", :pot => 0)
+        game.pay_out([frank,bob])
+        expect(frank.pot).to eq(20)
+        expect(bob.pot).to eq(20)
       end
     end
   end
