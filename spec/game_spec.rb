@@ -344,17 +344,46 @@ describe "Game" do
   end
 
   describe "#play_hand" do
-    it "calls #deal_em"
-    it "calls #ante_up"
-    it "calls #bet_phase until everyone has seen bet or folded"
-    it "calls #draw_phase and #switch_player for each player"
-    it "calls #bet_phase until everyone has seen bet or folded"
-    it "calls #show_em"
-    it "removes any players from @players whose pots < 10 (round ante)"
+    it "calls #deal_em" do
+      allow_any_instance_of(Game).to receive(:deal_em).and_return(true)
+      expect(game.play_hand).to eq(true)
+    end
+    it "calls #ante_up" do
+      allow_any_instance_of(Game).to receive(:ante_up).and_return(true)
+      expect(game.play_hand).to eq(true)
+    end
+    it "calls #bet_phase until everyone has seen bet or folded" do
+      allow_any_instance_of(Game).to receive(:bet_phase).and_return(true)
+      expect(game.play_hand).to eq(true)
+    end
+    it "calls #draw_phase and #switch_player for each player" do
+      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:switch_player).and_return(true)
+      expect(game.play_hand).to eq(true)
+    end
+    it "calls #bet_phase until everyone has seen bet or folded" do
+      allow_any_instance_of(Game).to receive(:bet_phase).and_return(true)
+      expect(game.play_hand).to eq(true)
+    end
+    it "calls #show_em" do
+      allow_any_instance_of(Game).to receive(:show_em).and_return(true)
+      expect(game.play_hand).to eq(true)
+    end
+    it "removes any players from @players whose pots < 10 (round ante)" do
+      game.current_player.instance_variable_set(:@pot, 4)
+      expect(game.players.length).to eq(2)
+    end
   end
 
   describe "#play" do
-    it "calls #play_hand until only one player remains"
-    it "declares last remaining player as winner and returns 'Game Over'"
+    it "calls #play_hand until only one player remains" do
+      allow_any_instance_of(Game).to receive(:play_hand).and_return(true)
+      expect(game.play).to eq(true)
+    end
+    it "declares last remaining player as winner and returns 'Game Over'"do
+      bob = instance_double("Bob", :pot => 20)
+      game.instance_variable_set(:@players, [bob])
+      expect(game.play).to eq('Game Over')
+    end
   end
 end
