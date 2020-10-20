@@ -85,6 +85,8 @@ describe "Game" do
   describe "#show_turn" do
     it "Says whose turn it is, calls and prints hand#show_hand, and waits for player to hit Enter to continue" do
       allow_any_instance_of(Game).to receive(:gets).and_return(true)
+      card = Card.new(2,:H)
+      game.current_player.instance_variable_set(:@hand, Hand.new(card,card,card,card,card))
       expect(game.show_turn).to eq(true)
     end
   end
