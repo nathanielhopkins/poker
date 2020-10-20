@@ -17,9 +17,8 @@ class Player
     @bet = value
   end
 
-  def new_hand(value)
-    @hand = value
-    @cards = @hand.cards
+  def new_hand
+    @hand = Hand.new(@cards[0],@cards[1],@cards[2],@cards[3],@cards[4])
   end
 
   def discard_phase
