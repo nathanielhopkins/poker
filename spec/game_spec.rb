@@ -26,7 +26,7 @@ describe "Game" do
     end
 
     it "creates and reads @current_player, initializing as value of first @player" do
-      expect(game.current_player).to eq(game.players[game.players.first])
+      expect(game.current_player).to eq(game.players.values.first)
     end
   end
 
