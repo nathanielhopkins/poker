@@ -69,7 +69,7 @@ describe "Game" do
     it "creates a new Deck and shuffles" do
       old_deck = game.deck.dup
       game.deal_em
-      expect(game.deck).not_to eq(old_deck)
+      expect(game.deck.cards).not_to eq(old_deck.cards)
     end
     it "calls deck#deal to deal each player 5 cards"  do
       game.deal_em
@@ -91,7 +91,7 @@ describe "Game" do
 
   describe "#draw_phase" do
     it "calls #show_turn" do
-      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:show_turn).and_return(true)
       expect(game.draw_phase).to eq(true)
     end
     it "calls player#discard_phase for current player" do
@@ -103,7 +103,7 @@ describe "Game" do
       expect(game.current_player.cards[4]).to eq("dummy_card")
     end
     it "calls show_turn again" do
-      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:show_turn).and_return(true)
       expect(game.draw_phase).to eq(true)
     end
   end
