@@ -9,7 +9,7 @@ describe "Game" do
     end
 
     it "requires at least two players" do
-      expect{Game.new(100,"Frank")}.to raise_error(ArguementError)
+      expect{Game.new(100,"Frank")}.to raise_error(ArgumentError)
     end
 
     it "creates a new deck and holds and reads as @deck" do
