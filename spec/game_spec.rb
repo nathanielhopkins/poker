@@ -83,37 +83,34 @@ describe "Game" do
   end
 
   describe "#show_turn" do
-    it "Says whose turn it is, calls and prints hand#show_hand, and waits for player to hit Enter to continue" do
+    it "Tells whose turn it is and shows hand" do
+      game.deal_em
       allow_any_instance_of(Game).to receive(:gets).and_return(true)
-      card = Card.new(2,:H)
-      game.current_player.instance_variable_set(:@hand, Hand.new(card,card,card,card,card))
+      allow_any_instance_of(Hand).to receive(:show_hand).and_return("nada")
       expect(game.show_turn).to eq(true)
     end
   end
 
   describe "#draw_phase" do
     it "calls #show_turn" do
+      allow_any_instance_of(Game).to receive(:gets).and_return(true)
       allow_any_instance_of(Game).to receive(:show_turn).and_return(true)
+      allow_any_instance_of(Player).to receive(:discard_phase).and_return(false)
+      expect(game.draw_phase).to eq(true)
+    end 
+
+    it "calls player#discard_phase for current player" do
+      allow_any_instance_of(Game).to receive(:show_turn).and_return(true)
+      allow_any_instance_of(Player).to receive(:discard_phase).and_return(false)
       expect(game.draw_phase).to eq(true)
     end
-    it "calls player#discard_phase for current player" do
-      allow_any_instance_of(Player).to receive(:discard_phase).and_return(game.current_player.cards[0])
-      expect(game.current_player.cards.length).to eq(4)
-    end
-    it "deals new cards to current player to replace discarded cards" do
-      allow_any_instance_of(Deck).to receive(:deal).and_return("dummy_card")
-      expect(game.current_player.cards[4]).to eq("dummy_card")
+    it "deals new cards to current player to replace discarded cards" do      
     end
     it "calls show_turn again" do
-      allow_any_instance_of(Game).to receive(:show_turn).and_return(true)
-      expect(game.draw_phase).to eq(true)
-    end
-  end
-
-  describe "#bet_display" do
-    it "prints who is betting, shows player bet, shows current bet, and wait for player to hit Enter to continue." do
       allow_any_instance_of(Game).to receive(:gets).and_return(true)
-      expect(game.bet_display).to eq(true)
+      allow_any_instance_of(Game).to receive(:show_turn).and_return(true)
+      allow_any_instance_of(Player).to receive(:discard_phase).and_return(false)
+      expect(game.draw_phase).to eq(true)
     end
   end
 
@@ -126,6 +123,13 @@ describe "Game" do
     it "moves 10 from each players pot to the game pot" do
       game.ante_up
       expect(game.current_player.pot).to eq(90)
+    end
+  end
+
+  describe "#bet_display" do
+    it "prints who is betting, shows player bet, shows current bet, and wait for player to hit Enter to continue." do
+      allow_any_instance_of(Game).to receive(:gets).and_return(true)
+      expect(game.bet_display).to eq(true)
     end
   end
 
