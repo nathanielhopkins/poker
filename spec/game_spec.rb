@@ -55,6 +55,17 @@ describe "Game" do
       game.deal_em
       expect(game.pot).to eq(0)
     end
+
+    it "sets @current_bet to 10 (round ante)" do
+      game.deal_em
+      expect(game.current_bet).to eq(10)
+    end
+
+    it "sets and reads @players_in_hand to equal @players.values" do
+      game.deal_em
+      expect(game.players_in_hand).to eq(game.players.values)
+    end
+
     it "creates a new Deck and shuffles" do
       old_deck = game.deck.dup
       game.deal_em
@@ -104,29 +115,82 @@ describe "Game" do
     end
   end
 
-  describe "#bet_phase" do
-    it "initializes @current_bet as 10 (round ante)" do
-      game.bet_phase
-      expect(game.current_bet).to eq(10)
+  describe "#ante_up" do
+    it "sets @bet for each player to eq 10" do
+      game.ante_up
+      expect(game.current_player.bet).to eq(10)
     end
-    it "calls #bet_display" 
+
+    it "moves 10 from each players pot to the game pot" do
+      game.ante_up
+      expect(game.current_player.pot).to eq(90)
+    end
+  end
+
+  describe "#bet_from_player" do
+    it "calls #bet_display and current_player#get_action" do
+      allow_any_instance_of(Player).to receive(:gets).and_return("see")
+      game.bet_from_player
+      expect(game.current_player.current_action).to eq(:see)
+    end
     context "player's bet is equal to current bet" do
       context "#get_action returns :see" do
-        it "does not change player bet or game bet and keeps player in hand"
+        it "keeps player in hand" do
+          allow_any_instance_of(Player).to receive(:gets).and_return("see")
+          game.current_player.instance_variable_set(:bet,10)
+          game.instance_variable_set(:current_bet, 10)
+          game.bet_from_player
+          expect(game.players_in_hand).to include(game.current_player)
+        end
       end
       context "#get_action returns :fold" do
-        it "removes player from hand"
+        it "removes player from hand" do
+          allow_any_instance_of(Player).to receive(:gets).and_return("fold")
+          game.bet_from_player
+          expect(game.players_in_hand).not_to include(game.current_player)
+        end
       end
       context "#get_action returns :raise" do
-        it "raises current game bet to player bet"
-        it "moves difference from players pot to game pot"
-        it "keeps player in hand"
+        context "asks user for raise amount and raise exceeds player's pot" do
+          it "raises error and gets new bet" do
+            allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise",100000,10)
+            expect{game.bet_from_player}.not_to raise_error
+          end
+        end
+        context "asks user for raise amount and raise does not exceed player's pot" do
+          it "raises current game bet to player bet" do
+            allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise", 10)
+            game.instance_variable_set(:@current_bet, 10)
+            game.current_player.instance_variable_set(:@bet,10)
+            game.bet_from_player
+            expect(game.current_bet).to eq(20)
+          end
+          it "moves difference from players pot to game pot" do
+            allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise",10)
+            game.instance_variable_set(:@current_bet, 10)
+            game.current_player.instance_variable_set(:@bet,10)
+            game.bet_from_player
+            expect(game.current_player.pot).to eq(80)
+          end
+          it "keeps player in hand" do
+            allow_any_instance_of(Player).to receive(:gets).and_return("raise")
+            game.bet_from_player
+            expect(game.players_in_hand).to include(game.current_player)
+          end
+        end
       end
     end
     
     context "player's bet is less than current bet" do
       context "#get_action returns :see" do
-        it "raises player bet to equal current bet"
+        it "raises player bet to equal current bet" do
+          allow_any_instance_of(Player).to recieve(:gets).and_return("see")
+          game.instance_variable_set(:@current_bet, 20)
+          game.current_player.instance_variable_set(:@bet,10)
+          game.bet_from_player
+          expect(game.current_player.pot).to eq(80)
+        end
+
         it "moves difference from players pot to game pot"
         it "keeps player in hand"
       end
@@ -139,6 +203,11 @@ describe "Game" do
         it "keeps player in hand"
       end
     end
+  end
+
+  describe "#bet_phase" do
+    it "calls #bet_from_player for each @players_in_hand"
+    it "calls #bet_from_player until everyone has seen or folded"
   end
 
   describe "#show_em" do
@@ -163,10 +232,12 @@ describe "Game" do
 
   describe "#play_hand" do
     it "calls #deal_em"
+    it "calls #ante_up"
+    it "calls #bet_phase until everyone has seen bet or folded"
     it "calls #draw_phase and #switch_player for each player"
     it "calls #bet_phase until everyone has seen bet or folded"
     it "calls #show_em"
-    it "removes any players whose pots < 10 (round ante)"
+    it "removes any players from @players whose pots < 10 (round ante)"
   end
 
   describe "#play" do
