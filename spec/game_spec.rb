@@ -37,6 +37,13 @@ describe "Game" do
     end
   end
 
+  describe "current_bet=(value)" do
+    it "sets current bet to new value" do
+      game.current_bet = 100
+      expect(game.current_bet).to eq(100)
+    end
+  end
+
   describe "#switch_player" do
     it "rotates @players so first player is now last" do
       game.switch_player
@@ -170,7 +177,7 @@ describe "Game" do
     context "player's bet is less than current bet" do
       context "#get_action returns :see" do
         it "raises player bet to equal current bet" do
-          allow_any_instance_of(Player).to recieve(:gets).and_return("see")
+          allow_any_instance_of(Player).to receive(:gets).and_return("see")
           allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
           game.deal_em
           game.ante_up
