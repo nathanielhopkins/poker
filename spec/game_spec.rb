@@ -190,6 +190,7 @@ describe "Game" do
 
         it "moves difference from players pot to game pot" do
           allow_any_instance_of(Player).to receive(:gets).and_return("see")
+          allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
           game.deal_em
           game.ante_up
           game.current_bet = 20
@@ -200,6 +201,7 @@ describe "Game" do
         
         it "keeps player in hand" do
           allow_any_instance_of(Player).to receive(:gets).and_return("see")
+          allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
           game.deal_em
           game.ante_up
           game.current_bet = 20
