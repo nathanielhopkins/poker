@@ -355,8 +355,8 @@ describe "Game" do
 
   describe "#pay_out" do
     it "takes in array containing one or more players" do
-      frank = instance_double("Frank")
-      bob = instance_double("Bob")
+      frank = game.players["Frank"]
+      bob = game.players["Bob"]
       expect{game.pay_out([bob])}.not_to raise_error
       expect{game.pay_out([frank,bob])}.not_to raise_error
     end
@@ -371,12 +371,12 @@ describe "Game" do
 
     context "two or more players are given" do
       it "splits the pot evenly among given players" do
-        game.pot = 40
-        frank = instance_double("Frank", :pot => 0)
-        bob = instance_double("Bob", :pot => 0)
+        game.instance_variable_set(:@pot,40)
+        frank = game.players["Frank"]
+        bob = game.players["Bob"]
         game.pay_out([frank,bob])
-        expect(frank.pot).to eq(20)
-        expect(bob.pot).to eq(20)
+        expect(frank.pot).to eq(120)
+        expect(bob.pot).to eq(120)
       end
     end
   end
