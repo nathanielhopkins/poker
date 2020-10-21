@@ -2,8 +2,8 @@ require_relative "deck"
 require_relative "hand"
 
 class Player
-  attr_reader :hand, :current_action, :bet
-  attr_accessor :cards, :pot
+  attr_reader :hand, :bet
+  attr_accessor :cards, :pot, :current_action
 
   def initialize(hand, pot)
     @hand = hand
