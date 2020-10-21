@@ -157,6 +157,8 @@ describe "Game" do
     it "calls #bet_display and current_player#get_action" do
       allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
       allow_any_instance_of(Player).to receive(:gets).and_return("see")
+      game.deal_em
+      game.ante_up
       game.bet_from_player
       expect(game.current_player.current_action).to eq(:see)
     end
@@ -187,7 +189,7 @@ describe "Game" do
         end
 
         it "moves difference from players pot to game pot" do
-          allow_any_instance_of(Player).to recieve(:gets).and_return("see")
+          allow_any_instance_of(Player).to receive(:gets).and_return("see")
           game.deal_em
           game.ante_up
           game.current_bet = 20
@@ -197,7 +199,7 @@ describe "Game" do
         end
         
         it "keeps player in hand" do
-          allow_any_instance_of(Player).to recieve(:gets).and_return("see")
+          allow_any_instance_of(Player).to receive(:gets).and_return("see")
           game.deal_em
           game.ante_up
           game.current_bet = 20
