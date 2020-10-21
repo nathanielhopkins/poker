@@ -133,6 +133,19 @@ describe "Game" do
     end
   end
 
+  describe "#raise_prompt" do
+    it "prompts user for raise amount and gets and returns input from user" do
+      allow_any_instance_of(Game).to receive(:gets).and_return(10)
+      expect(game.raise_prompt).to eq(10)
+    end
+
+    it "raises error, rescues, and retries if amount is more than player's pot" do
+      allow_any_instance_of(Game).to receive(:gets).and_return(1000,10)
+      expect{game.raise_prompt}.not_to raise_error
+      expect(game.raise_prompt).to eq(10)
+    end
+  end
+
   describe "#bet_from_player" do
     it "calls #bet_display and current_player#get_action" do
       allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
