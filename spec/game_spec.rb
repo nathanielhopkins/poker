@@ -232,6 +232,16 @@ describe "Game" do
         expect(game.current_bet).to eq(20)
       end
 
+      it "raises player's bet to match current bet" do
+        allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
+        allow_any_instance_of(Player).to receive(:gets).and_return("raise")
+        allow_any_instance_of(Game).to receive(:raise_prompt).and_return(10)
+        game.deal_em
+        game.ante_up
+        game.bet_from_player
+        expect(game.current_player.bet).to eq(20)
+      end
+
       it "moves difference from players pot to game pot" do
         allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
         allow_any_instance_of(Player).to receive(:gets).and_return("raise")
@@ -257,14 +267,18 @@ describe "Game" do
   describe "#bet_phase" do
     it "calls #bet_from_player for each @players_in_hand" do
       allow_any_instance_of(Player).to receive(:gets).and_return("see")
-      game.instance_variable_set(:@current_bet,10)
+      allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
+      game.deal_em
+      game.ante_up
       game.bet_phase
       expect(game.pot).to eq(30)
       expect(game.current_player.pot).to eq(90)
     end
     it "calls #bet_from_player until everyone has seen or folded then returns true" do
-      allow_any_instance_of(Player).to receive(:gets).and_return("see")
-      game.instance_variable_set(:@current_bet,10)
+      allow_any_instance_of(Player).to receive(:gets).and_return("fold","see")
+      allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
+      game.deal_em
+      game.ante_up
       game.bet_phase
       expect(game.bet_phase).to eq(true)
     end
