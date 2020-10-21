@@ -434,11 +434,14 @@ describe "Game" do
   describe "#play" do
     it "calls #play_hand until only one player remains" do
       allow_any_instance_of(Game).to receive(:play_hand).and_return(true)
-      expect(game.play).to eq(true)
-    end
-    it "declares last remaining player as winner and returns 'Game Over'"do
       bob = instance_double("Bob", :pot => 20)
-      game.instance_variable_set(:@players, [bob])
+      game.instance_variable_set(:@players, {bob=>"the greatest"})
+      expect(game.play_hand).to eq(true)
+    end
+    it "declares last remaining player as winner and returns 'Game Over'" do
+      allow_any_instance_of(Game).to receive(:play_hand).and_return(true)
+      bob = instance_double("Bob", :pot => 20)
+      game.instance_variable_set(:@players, {bob=>"the greatest"})
       expect(game.play).to eq('Game Over')
     end
   end
