@@ -211,41 +211,34 @@ describe "Game" do
       end
 
     context "#get_action returns :raise" do
-      context "asks user for raise amount and raise exceeds player's pot" do
-        it "raises error and gets new bet" do
-          allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
-          allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise",100000,10)
-          expect{game.bet_from_player}.not_to raise_error
-        end
+      it "raises current game bet to player bet" do
+        allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
+        allow_any_instance_of(Player).to receive(:gets).and_return("raise")
+        allow_any_instance_of(Game).to receive(:raise_prompt).and_return(10)
+        game.deal_em
+        game.ante_up
+        game.bet_from_player
+        expect(game.current_bet).to eq(20)
       end
-      
-      context "asks user for raise amount and raise does not exceed player's pot" do
-        it "raises current game bet to player bet" do
-          allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
-          allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise", 10)
-          game.deal_em
-          game.ante_up
-          game.bet_from_player
-          expect(game.current_bet).to eq(20)
-        end
 
-        it "moves difference from players pot to game pot" do
-          allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
-          allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise",10)
-          game.deal_em
-          game.ante_up
-          game.bet_from_player
-          expect(game.current_player.pot).to eq(80)
-        end
+      it "moves difference from players pot to game pot" do
+        allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
+        allow_any_instance_of(Player).to receive(:gets).and_return("raise")
+        allow_any_instance_of(Game).to receive(:raise_prompt).and_return(10)
+        game.deal_em
+        game.ante_up
+        game.bet_from_player
+        expect(game.current_player.pot).to eq(80)
+      end
 
-        it "keeps player in hand" do
-          allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
-          allow_any_instance_of(Player).to receive(:gets).and_return("raise","raise",10)
-          game.deal_em
-          game.ante_up
-          game.bet_from_player
-          expect(game.players_in_hand).to include(game.current_player)
-        end
+      it "keeps player in hand" do
+        allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
+        allow_any_instance_of(Player).to receive(:gets).and_return("raise")
+        allow_any_instance_of(Game).to receive(:raise_prompt).and_return(10)
+        game.deal_em
+        game.ante_up
+        game.bet_from_player
+        expect(game.players_in_hand).to include(game.current_player)
       end
     end
   end
