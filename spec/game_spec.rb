@@ -106,7 +106,13 @@ describe "Game" do
       allow_any_instance_of(Player).to receive(:discard_phase).and_return(false)
       expect(game.draw_phase).to eq(true)
     end
-    it "deals new cards to current player to replace discarded cards" do      
+    it "deals new cards to current player to replace discarded cards" do 
+      allow_any_instance_of(Game).to receive(:show_turn).and_return(true)
+      game.deal_em
+      allow_any_instance_of(Player).to receive(:discard_display).and_return(true)
+      allow_any_instance_of(Player).to receive(:discard_input).and_return([game.current_player.cards[0]])
+      game.draw_phase
+      expect(game.current_player.cards.length).to eq(5)     
     end
     it "calls show_turn again" do
       allow_any_instance_of(Game).to receive(:gets).and_return(true)
@@ -284,8 +290,17 @@ describe "Game" do
     end
   end
 
+  describe "#show_em_display" do
+    it "prints each players_in_hand and shows their cards and returns true" do
+      game.deal_em
+      expect(game.show_em_display).to eq(true)
+    end
+  end
+
   describe "#show_em" do
-    it "prints each player still in hand with thier cards (hand#show_hand), compares hands, and returns winner(s) as array" do
+    it "calls #show_em_display, compares hands, and returns winner(s) as array" do
+      allow_any_instance_of(Game).to receive(:show_em_display).and_return(true)
+      game.deal_em
       expect(game.show_em).to be_an(Array)
     end
     context "one hand has the best(lowest) hand_score" do
