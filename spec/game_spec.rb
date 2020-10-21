@@ -191,6 +191,7 @@ describe "Game" do
         it "removes player from hand" do
           allow_any_instance_of(Game).to receive(:bet_display).and_return(true)
           allow_any_instance_of(Player).to receive(:gets).and_return("fold")
+          game.deal_em
           game.bet_from_player
           expect(game.players_in_hand).not_to include(game.current_player)
         end
