@@ -383,32 +383,50 @@ describe "Game" do
 
   describe "#play_hand" do
     it "calls #deal_em" do
-      allow_any_instance_of(Game).to receive(:deal_em).and_return(true)
-      expect(game.play_hand).to eq(true)
+      allow_any_instance_of(Game).to receive(:bet_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:show_em).and_return([game.current_player])
+      game.play_hand
+      expect(game.players_in_hand).not_to be_empty
     end
     it "calls #ante_up" do
-      allow_any_instance_of(Game).to receive(:ante_up).and_return(true)
-      expect(game.play_hand).to eq(true)
+      allow_any_instance_of(Game).to receive(:bet_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:show_em).and_return([game.current_player])
+      game.play_hand
+      expect(game.current_player.pot).not_to eq(100)
     end
     it "calls #bet_phase until everyone has seen bet or folded" do
       allow_any_instance_of(Game).to receive(:bet_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:show_em).and_return([game.current_player])
       expect(game.play_hand).to eq(true)
     end
     it "calls #draw_phase and #switch_player for each player" do
+      allow_any_instance_of(Game).to receive(:bet_phase).and_return(true)
       allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
-      allow_any_instance_of(Game).to receive(:switch_player).and_return(true)
+      allow_any_instance_of(Game).to receive(:show_em).and_return([game.current_player])
       expect(game.play_hand).to eq(true)
     end
     it "calls #bet_phase until everyone has seen bet or folded" do
+      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
       allow_any_instance_of(Game).to receive(:bet_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:show_em).and_return([game.current_player])
       expect(game.play_hand).to eq(true)
     end
     it "calls #show_em" do
-      allow_any_instance_of(Game).to receive(:show_em).and_return(true)
+      allow_any_instance_of(Game).to receive(:bet_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:show_em).and_return([game.current_player])
       expect(game.play_hand).to eq(true)
     end
     it "removes any players from @players whose pots < 10 (round ante)" do
+      allow_any_instance_of(Game).to receive(:bet_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
+      allow_any_instance_of(Game).to receive(:show_em).and_return([true])
+      allow_any_instance_of(Game).to receive(:pay_out).and_return(true)
       game.current_player.instance_variable_set(:@pot, 4)
+      game.play_hand
       expect(game.players.length).to eq(2)
     end
   end
