@@ -305,46 +305,48 @@ describe "Game" do
     end
     context "one hand has the best(lowest) hand_score" do
       it "returns player with best hand_score" do
-        allow_any_instance_of(Game).to receive(:players_in_hand).and_return([Bob,Frank])
-        allow(Bob).to receive(:hand_score).and_return(3)
-        allow(Frank).to receive(:hand_score).and_return(5)
-        expect(game.show_em).to eq([Bob])
+        allow_any_instance_of(Game).to receive(:show_em_display).and_return(true)
+        bob_hand = instance_double("bob_hand", :hand_score => 3,:match_value => 7,:high_card => 10)
+        frank_hand = instance_double("frank_hand", :hand_score => 5,:match_value => 7,:high_card => 10)
+        bob = instance_double("Bob", :hand => bob_hand)
+        frank = instance_double("Frank", :hand => frank_hand)
+        allow_any_instance_of(Game).to receive(:players_in_hand).and_return([bob,frank])
+        expect(game.show_em).to eq([bob])
       end
     end
     context "two hands have the best and same hand_score" do
       context "one hand has higher match_value" do
         it "returns the player with higher match_value hand" do
-        allow_any_instance_of(Game).to receive(:players_in_hand).and_return([Bob,Frank])
-        allow(Bob).to receive(:hand_score).and_return(5)
-        allow(Frank).to receive(:hand_score).and_return(5)
-        allow(Bob).to receive(:match_value).and_return(2)
-        allow(Frank).to receive(:match_value).and_return(12)
-        expect(game.show_em).to eq([Frank])
+        allow_any_instance_of(Game).to receive(:show_em_display).and_return(true)
+        bob_hand = instance_double("bob_hand", :hand_score => 8,:match_value => 11,:high_card => 10)
+        frank_hand = instance_double("frank_hand", :hand_score => 8, :match_value => 7,:high_card => 10)
+        bob = instance_double("Bob", :hand => bob_hand)
+        frank = instance_double("Frank", :hand => frank_hand)
+        allow_any_instance_of(Game).to receive(:players_in_hand).and_return([bob,frank])
+        expect(game.show_em).to eq([bob])
         end
       end
       context "match_values are equal" do
         context "one hand as higher high_card" do
           it "returns the player with the higher high_card hand" do
-            allow_any_instance_of(Game).to receive(:players_in_hand).and_return([Bob,Frank])
-            allow(Bob).to receive(:hand_score).and_return(5)
-            allow(Frank).to receive(:hand_score).and_return(5)
-            allow(Bob).to receive(:match_value).and_return(2)
-            allow(Frank).to receive(:match_value).and_return(2)
-            allow(Bob).to receive(:high_card).and_return(7)
-            allow(Frank).to receive(:high_card).and_return(12)
-            expect(game.show_em).to eq([Frank])
+            allow_any_instance_of(Game).to receive(:show_em_display).and_return(true)
+            bob_hand = instance_double("bob_hand", :hand_score => 8,:match_value => 7,:high_card => 14)
+            frank_hand = instance_double("frank_hand", :hand_score => 8, :match_value =>7, :high_card =>10)
+            bob = instance_double("Bob", :hand => bob_hand)
+            frank = instance_double("Frank", :hand => frank_hand)
+            allow_any_instance_of(Game).to receive(:players_in_hand).and_return([bob,frank])
+            expect(game.show_em).to eq([bob])
           end
         end
         context "high_cards are the same" do
            it "returns array of tying winners" do
-            allow_any_instance_of(Game).to receive(:players_in_hand).and_return([Bob,Frank])
-            allow(Bob).to receive(:hand_score).and_return(5)
-            allow(Frank).to receive(:hand_score).and_return(5)
-            allow(Bob).to receive(:match_value).and_return(2)
-            allow(Frank).to receive(:match_value).and_return(2)
-            allow(Bob).to receive(:high_card).and_return(7)
-            allow(Frank).to receive(:high_card).and_return(7)
-            expect(game.show_em).to eq([Bob,Frank])
+            allow_any_instance_of(Game).to receive(:show_em_display).and_return(true)
+            bob_hand = instance_double("bob_hand", :hand_score => 8,:match_value => 7,:high_card => 10)
+            frank_hand = instance_double("frank_hand", :hand_score => 8, :match_value =>7, :high_card =>10)
+            bob = instance_double("Bob", :hand => bob_hand)
+            frank = instance_double("Frank", :hand => frank_hand)
+            allow_any_instance_of(Game).to receive(:players_in_hand).and_return([bob,frank])
+            expect(game.show_em).to eq([bob,frank])
            end
         end
       end
