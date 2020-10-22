@@ -30,6 +30,9 @@ class Game
   end
 
   def show_turn
+    system("clear")
+    puts "It is #{@players.key(@current_player)}'s turn. Press Enter to continue."
+    gets
     puts "#{@players.key(@current_player)}'s hand: #{@current_player.hand.show_hand}"
     gets
   end
@@ -59,8 +62,6 @@ class Game
     puts "#{@players.key(@current_player)}'s pot: #{@current_player.pot}"
     puts "#{@players.key(@current_player)}'s bet: #{@current_player.bet}"
     puts "Current game bet: #{@current_bet}"
-    puts "Press Enter to continue."
-    gets
     puts "Would you like to 'see','fold',or 'raise'?"
     true
   end
@@ -101,7 +102,8 @@ class Game
     @players.values.each {|player| player.current_action = :none}
     until @players_in_hand.all? {|player| player.current_action == :see} || @players_in_hand.length <= 1
       @players_in_hand.length.times do
-        bet_from_player
+        @current_player.current_action = :see if @current_player.current_action == :raise && @current_player.bet == @current_bet
+        bet_from_player unless @current_player.bet == @current_bet && @current_player.current_action == :see
         switch_player
       end
     end
@@ -142,6 +144,14 @@ class Game
     winners_array.each {|player| player.pot += each_pot}
   end
 
+  def declare_round_winner(winner)
+    winning_hand = winner.first.hand.type
+    winner_names = winner.map {|winner| @players.key(winner)}
+    puts "#{winner_names.join(" and ")} wins #{@pot} with a #{winning_hand.to_s}. Press Enter to continue."
+    gets
+  end
+
+
   def play_hand
     deal_em
     ante_up
@@ -154,8 +164,7 @@ class Game
     winner = show_em
     pay_out(winner)
     winner_names = winner.map {|winner| @players.key(winner)}
-    puts "#{winner_names.join(" and ")} wins #{@pot} with a #{@current_player.hand.hand_type}. Press Enter to continue."
-    gets
+    declare_round_winner(winner)
     out = @players.select {|k,v| v.pot < 10}
     if out.empty? == false
       out_names = out.keys.join(" and ")
