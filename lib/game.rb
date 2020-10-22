@@ -156,9 +156,11 @@ class Game
     deal_em
     ante_up
     bet_phase
-    @players_in_hand.each do |player|
-      draw_phase
-      switch_player
+    if @players_in_hand.length > 1
+      @players_in_hand.each do |player|
+        draw_phase
+        switch_player
+      end
     end
     bet_phase
     winner = show_em
