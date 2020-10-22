@@ -433,6 +433,7 @@ describe "Game" do
       allow_any_instance_of(Game).to receive(:draw_phase).and_return(true)
       allow_any_instance_of(Game).to receive(:show_em).and_return([true])
       allow_any_instance_of(Game).to receive(:pay_out).and_return(true)
+      allow_any_instance_of(Game).to receive(:declare_round_winner).and_return(true)
       game.current_player.instance_variable_set(:@pot, 4)
       game.play_hand
       expect(game.players.length).to eq(2)
